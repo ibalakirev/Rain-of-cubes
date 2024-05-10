@@ -57,14 +57,9 @@ public class Cube : MonoBehaviour
 
     private IEnumerator CountLifeTime(float lifeTime)
     {
-        float dealy = 1f;
+        WaitForSeconds timeWait = new WaitForSeconds(lifeTime);
 
-        WaitForSeconds timeWait = new WaitForSeconds(dealy);
-
-        for (int i = 0; i < lifeTime; i++)
-        {
-            yield return timeWait;
-        }
+        yield return timeWait;
 
         _isLifeTimeCounted = true;
     }
