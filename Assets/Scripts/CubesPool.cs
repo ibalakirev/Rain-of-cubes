@@ -5,26 +5,20 @@ public class CubesPool : MonoBehaviour
 {
     [SerializeField] private Cube _prefabCube;
 
-    private int _poolSize = 98;
-    private List<Cube> _cubesPool;
+    private List<Cube> _cubesPool = new List<Cube>();
 
-    public void InitializePool()
+    public void Initialize()
     {
-        _cubesPool = new List<Cube>();
+        Cube newCube = Instantiate(_prefabCube);
 
-        for (int i = 0; i < _poolSize; i++)
-        {
-            Cube newCube = Instantiate(_prefabCube);
+        _cubesPool.Add(newCube);
 
-            _cubesPool.Add(newCube);
-
-            newCube.gameObject.SetActive(false);
-        }
+        newCube.gameObject.SetActive(false);
     }
 
-    public Cube GetObjectToPool(Vector3 targetPosition, Quaternion rotation)
+    public Cube GetObject(Vector3 targetPosition, Quaternion rotation)
     {
-        if( _cubesPool.Count == 0)
+        if (_cubesPool.Count == 0)
         {
             return null;
         }
@@ -43,7 +37,7 @@ public class CubesPool : MonoBehaviour
         }
     }
 
-    public void ReturnObjectToPool(Cube cube)
+    public void ReturnObject(Cube cube)
     {
         cube.gameObject.SetActive(false);
 

@@ -7,16 +7,21 @@ public class Spawner : MonoBehaviour
     [SerializeField] private List<Transform> _targetPoints;
     [SerializeField] private CubesPool _cubesPool;
 
+    private float _quantityCubes = 25;
+
     private void Start()
     {
-        _cubesPool.InitializePool();
+        for (int i = 0; i < _quantityCubes; i++)
+        {
+            _cubesPool.Initialize();
+        }
 
         StartCoroutine(CreateCubes());
     }
 
     private IEnumerator CreateCubes()
     {
-        float delay = 0.1f;
+        float delay = 0.5f;
         int minRandomIndex = 0;
         int maxRandomIndex = _targetPoints.Count - 1;
 
@@ -26,7 +31,7 @@ public class Spawner : MonoBehaviour
         {
             int randomValue = Random.Range(minRandomIndex, maxRandomIndex);
 
-            _cubesPool.GetObjectToPool(_targetPoints[randomValue].transform.position, transform.rotation);
+            _cubesPool.GetObject(_targetPoints[randomValue].transform.position, transform.rotation);
 
             yield return timeWait;
         }

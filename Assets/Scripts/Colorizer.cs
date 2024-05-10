@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Colorizer : MonoBehaviour
 {
-    public void PaintObject(MeshRenderer meshRenderer)
+    public void PaintObject(MeshRenderer meshRenderer, Color color)
     {
-        meshRenderer.material.color = Random.ColorHSV();
+        meshRenderer.material.color = color;
     }
 }
 

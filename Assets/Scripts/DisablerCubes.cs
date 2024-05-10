@@ -1,46 +1,40 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DisablerCubes : MonoBehaviour
 {
     [SerializeField] private CubesPool _cubesPool;
 
-    private List<Cube> _cubes;
+    private Vector3 _size = new Vector3(100f, 1f, 100f);
 
     private void Start()
     {
-        _cubes = new List<Cube>();
-
         StartCoroutine(KeepTrackEndLifeCubes());
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnDrawGizmos()
     {
-        if (other.TryGetComponent(out Cube cube))
-        {
-            _cubes.Add(cube);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(transform.position, _size);
     }
 
     private IEnumerator KeepTrackEndLifeCubes()
     {
         float delay = 1;
-        float minValueCount = 0;
 
         WaitForSeconds timeWait = new WaitForSeconds(delay);
 
         while (enabled)
         {
-            if(_cubes.Count > minValueCount)
-            {
-                for (int i = 0; i < _cubes.Count; i++)
-                {
-                    if (_cubes[i].IsLifeTimeCounted)
-                    {
-                        _cubesPool.ReturnObjectToPool(_cubes[i]);
+            Collider[] overlappedColliders = Physics.OverlapBox(transform.position, _size, Quaternion.identity);
 
-                        _cubes.Remove(_cubes[i]);
+            for (int i = 0; i < overlappedColliders.Length; i++)
+            {
+                if (overlappedColliders[i].TryGetComponent(out Cube cube))
+                {
+                    if (cube.IsLifeTimeCounted)
+                    {
+                        _cubesPool.ReturnObject(cube);
                     }
                 }
             }

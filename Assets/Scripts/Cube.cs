@@ -6,26 +6,35 @@ using UnityEngine;
 public class Cube : MonoBehaviour
 {
     private float _quantityCollisions;
-    private bool _isLifeTimeCounted = false;
+    private bool _isLifeTimeCounted;
     private Coroutine _coroutine;
     private Colorizer _colorizer;
     private MeshRenderer _meshRenderer;
+    private Color _colorRandom;
+    private Color _colorDefault;
 
     public bool IsLifeTimeCounted => _isLifeTimeCounted;
 
-    private void Start()
+    private void OnEnable()
     {
+        _quantityCollisions = 0;
+        _isLifeTimeCounted = false;
+        _colorRandom = Random.ColorHSV();
+        _colorDefault = Color.green;
+
         _colorizer = GetComponent<Colorizer>();
         _meshRenderer = GetComponent<MeshRenderer>();
+
+        PaintInDefaultColor();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.TryGetComponent(out Plane plane))
         {
-            _quantityCollisions++;
+            IncreaseQuantityCollisions();
 
-            Paint(_quantityCollisions);
+            PaintInRandomColor(_quantityCollisions);
 
             GetRandomLifeTime();
 
@@ -60,13 +69,23 @@ public class Cube : MonoBehaviour
         _isLifeTimeCounted = true;
     }
 
-    private void Paint(float quantityCollisions)
+    private void IncreaseQuantityCollisions()
+    {
+        _quantityCollisions++;
+    }
+
+    private void PaintInRandomColor(float quantityCollisions)
     {
         float minQuantityCollisions = 1;
 
         if (quantityCollisions == minQuantityCollisions)
         {
-            _colorizer.PaintObject(_meshRenderer);
+            _colorizer.PaintObject(_meshRenderer, _colorRandom);
         }
+    }
+
+    private void PaintInDefaultColor()
+    {
+        _colorizer.PaintObject(_meshRenderer, _colorDefault);
     }
 }
