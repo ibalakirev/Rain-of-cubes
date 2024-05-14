@@ -21,9 +21,11 @@ public class Bomb : ObjectGame
 
         _renderer = GetComponent<Renderer>();
 
+        _renderer.material.color = Color.black;
+
         _color = _renderer.material.color;
 
-        if(_coroutine != null)
+        if (_coroutine != null)
         {
             StopCoroutine(_coroutine);
         }
