@@ -6,7 +6,8 @@ using UnityEngine;
 public class Bomb : ObjectGame
 {
     private Renderer _renderer;
-    private Color _color;
+    private Color _currentColor;
+    private Color _defaultColor = Color.black;
     private Coroutine _coroutine;
     private float _minAlpha = 0f;
     private bool _isTransparencyReduced;
@@ -21,9 +22,9 @@ public class Bomb : ObjectGame
 
         _renderer = GetComponent<Renderer>();
 
-        _renderer.material.color = Color.black;
+        _renderer.material.color = _defaultColor;
 
-        _color = _renderer.material.color;
+        _currentColor = _renderer.material.color;
 
         if (_coroutine != null)
         {
@@ -39,11 +40,11 @@ public class Bomb : ObjectGame
 
         WaitForSeconds timeWait = new WaitForSeconds(delay);
 
-        while(_color.a > _minAlpha)
+        while(_currentColor.a > _minAlpha)
         {
-            _color.a = Mathf.MoveTowards(_color.a, _minAlpha, speedTransparencyReduced);
+            _currentColor.a = Mathf.MoveTowards(_currentColor.a, _minAlpha, speedTransparencyReduced);
 
-            _renderer.material.color = _color;
+            _renderer.material.color = _currentColor;
 
             yield return timeWait;
         }
