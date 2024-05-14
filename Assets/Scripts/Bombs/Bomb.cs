@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent (typeof(Rigidbody), typeof(Renderer))]
+[RequireComponent(typeof(Rigidbody), typeof(Renderer))]
 
 public class Bomb : ObjectGame
 {
@@ -22,7 +22,7 @@ public class Bomb : ObjectGame
 
         _renderer = GetComponent<Renderer>();
 
-        _renderer.material.color = _defaultColor;
+        PaintMaterial(_defaultColor);
 
         _currentColor = _renderer.material.color;
 
@@ -40,15 +40,20 @@ public class Bomb : ObjectGame
 
         WaitForSeconds timeWait = new WaitForSeconds(delay);
 
-        while(_currentColor.a > _minAlpha)
+        while (_currentColor.a > _minAlpha)
         {
             _currentColor.a = Mathf.MoveTowards(_currentColor.a, _minAlpha, speedTransparencyReduced);
 
-            _renderer.material.color = _currentColor;
+            PaintMaterial(_currentColor);
 
             yield return timeWait;
         }
 
         _isTransparencyReduced = true;
+    }
+
+    private void PaintMaterial(Color color)
+    {
+        _renderer.material.color = color;
     }
 }
