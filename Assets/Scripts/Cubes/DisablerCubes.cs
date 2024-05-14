@@ -1,21 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-public class DisablerCubes : MonoBehaviour
+public class DisablerCubes : Disabler<CubesPool>
 {
-    [SerializeField] private CubesPool _cubesPool;
-
-    private Vector3 _size = new Vector3(100f, 1f, 100f);
+    [SerializeField] private SpawnerBombs _spawnerBombs;
 
     private void Start()
     {
         StartCoroutine(KeepTrackEndLifeCubes());
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position, _size);
     }
 
     private IEnumerator KeepTrackEndLifeCubes()
@@ -26,7 +18,7 @@ public class DisablerCubes : MonoBehaviour
 
         while (enabled)
         {
-            Collider[] overlappedColliders = Physics.OverlapBox(transform.position, _size, Quaternion.identity);
+            Collider[] overlappedColliders = Physics.OverlapSphere(transform.position, Radius);
 
             for (int i = 0; i < overlappedColliders.Length; i++)
             {
@@ -34,7 +26,9 @@ public class DisablerCubes : MonoBehaviour
                 {
                     if (cube.IsLifeTimeCounted)
                     {
-                        _cubesPool.ReturnObject(cube);
+                        _spawnerBombs.CreateBomb(cube.transform, cube.transform.rotation);
+
+                        ObjectsPool.ReturnObject(cube);
                     }
                 }
             }

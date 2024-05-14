@@ -1,39 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] private List<Transform> _targetPoints;
-    [SerializeField] private CubesPool _cubesPool;
+    [SerializeField] private T _objectsPool;
+    [SerializeField] private int _quantityOjects;
 
-    private float _quantityCubes = 25;
+    private int _quantityObjectsCreated;
+    private int _quantityObjectsActive;
 
-    private void Start()
+    public event Action ObjectCreated;
+    public event Action ActiveObjectsCounted;
+
+    public int QuantityObjectsCreated => _quantityObjectsCreated;
+    public int QuantityObjectsActive => _quantityObjectsActive;
+    protected T ObjectsPool => _objectsPool;
+    protected int QuantityOjects => _quantityOjects;
+
+    protected void ReportCreatedObject()
     {
-        for (int i = 0; i < _quantityCubes; i++)
-        {
-            _cubesPool.Initialize();
-        }
+        _quantityObjectsCreated++;
 
-        StartCoroutine(CreateCubes());
+        ObjectCreated?.Invoke();
     }
 
-    private IEnumerator CreateCubes()
+    protected void ReportActiveObject()
     {
-        float delay = 0.5f;
-        int minRandomIndex = 0;
-        int maxRandomIndex = _targetPoints.Count - 1;
+        ActiveObjectsCounted?.Invoke();
+    }
 
-        WaitForSeconds timeWait = new WaitForSeconds(delay);
-
-        while (enabled)
-        {
-            int randomValue = Random.Range(minRandomIndex, maxRandomIndex);
-
-            _cubesPool.GetObject(_targetPoints[randomValue].transform.position, transform.rotation);
-
-            yield return timeWait;
-        }
+    protected int GetQuantityActiveObjects(int quantity)
+    {
+        return _quantityObjectsActive = _quantityOjects - quantity;
     }
 }

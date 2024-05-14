@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Colorizer), typeof(MeshRenderer))]
 
-public class Cube : MonoBehaviour
+public class Cube : ObjectGame
 {
     private float _quantityCollisions;
     private bool _isLifeTimeCounted;
@@ -12,6 +12,8 @@ public class Cube : MonoBehaviour
     private MeshRenderer _meshRenderer;
     private Color _colorRandom;
     private Color _colorDefault;
+    private float _minValueLifeTime = 2;
+    private float _maxValueLifeTime = 5;
 
     public bool IsLifeTimeCounted => _isLifeTimeCounted;
 
@@ -36,23 +38,13 @@ public class Cube : MonoBehaviour
 
             PaintInRandomColor(_quantityCollisions);
 
-            GetRandomLifeTime();
-
             if (_coroutine != null)
             {
                 StopCoroutine(_coroutine);
             }
 
-            _coroutine = StartCoroutine(CountLifeTime(GetRandomLifeTime()));
+            _coroutine = StartCoroutine(CountLifeTime(GetRandomLifeTime(_minValueLifeTime, _maxValueLifeTime)));
         }
-    }
-
-    public float GetRandomLifeTime()
-    {
-        float minValueLifeTime = 2;
-        float maxValueLifeTime = 5;
-
-        return Random.Range(minValueLifeTime, maxValueLifeTime);
     }
 
     private IEnumerator CountLifeTime(float lifeTime)
